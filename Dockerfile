@@ -8,7 +8,7 @@ RUN chmod a+x /entrypoint.sh
 RUN apk add curl jq
 
 # install latest cli
-RUN curl -L $(curl -s https://api.github.com/repos/contabo/cntb/releases/latest |grep "browser_download_url" |grep "Linux_x86_64.tar.gz" |cut -d : -f 2,3 |tr -d '\"') |tar xz \
+RUN curl -L $(curl -s https://api.github.com/repos/contabo/cntb/releases/latest |grep "browser_download_url" |grep "linux_amd64.tar.gz" |cut -d : -f 2,3 |tr -d '\"') |tar xz \
     && mv cntb /usr/local/bin/
 
 # entrypoint
