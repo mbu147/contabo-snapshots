@@ -12,6 +12,17 @@ for VAR in CLIENTID CLIENTSECRET USER PASSWORD; do
     fi
 done
 
+# configure timezone
+if [ -n "${TZ}" ]; then
+    if [ -f "/usr/share/zoneinfo/${TZ}" ]; then
+        ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime
+        echo "${TZ}" > /etc/timezone
+        log "Timezone set to ${TZ}"
+    else
+        log "WARNING: Unknown timezone '${TZ}', falling back to UTC"
+    fi
+fi
+
 # authenticate
 log "Configuring Contabo credentials"
 cntb config set-credentials \

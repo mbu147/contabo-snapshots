@@ -13,6 +13,7 @@ Supports both **one-shot** and **scheduled (cron)** modes.
 | `PASSWORD`      | Yes      |          | Contabo account password                                           |
 | `CRON_SCHEDULE` | No       |          | Cron expression (e.g. `0 3 * * *`). If unset, runs once and exits |
 | `SNAPSHOT_NAME` | No       | `daily`  | Name given to created snapshots                                    |
+| `TZ`            | No       | `UTC`    | Timezone for cron scheduling (e.g. `America/New_York`, `Europe/Berlin`) |
 
 ## Usage
 

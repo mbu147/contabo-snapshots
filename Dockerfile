@@ -1,7 +1,7 @@
 FROM alpine:3.21
 
 # install needed tools
-RUN apk add --no-cache curl jq
+RUN apk add --no-cache curl jq tzdata
 
 # install latest cntb cli
 RUN curl -fsSL "$(curl -fsSL https://api.github.com/repos/contabo/cntb/releases/latest \
@@ -21,6 +21,9 @@ ENV PASSWORD=""
 # Optional: set a cron expression to run on a schedule (e.g. "0 3 * * *")
 # If unset, the snapshot runs once and the container exits.
 ENV CRON_SCHEDULE=""
+
+# Optional: timezone for cron scheduling (e.g. "America/New_York", "Europe/Berlin")
+ENV TZ="UTC"
 
 # Optional: snapshot name (default: daily)
 ENV SNAPSHOT_NAME="daily"
