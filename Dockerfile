@@ -1,15 +1,31 @@
-FROM alpine:latest
-
-# add entrypoint script and set as executeable
-ADD entrypoint.sh /
-RUN chmod a+x /entrypoint.sh
+FROM alpine:3.21
 
 # install needed tools
-RUN apk add curl jq
+RUN apk add --no-cache curl jq tzdata
 
-# install latest cli
-RUN curl -L $(curl -s https://api.github.com/repos/contabo/cntb/releases/latest |grep "browser_download_url" |grep "linux_amd64.tar.gz" |cut -d : -f 2,3 |tr -d '\"') |tar xz \
-    && mv cntb /usr/local/bin/
+# install latest cntb cli
+RUN curl -fsSL "$(curl -fsSL https://api.github.com/repos/contabo/cntb/releases/latest \
+      | jq -r '.assets[] | select(.name | test("linux_amd64\\.tar\\.gz")) | .browser_download_url')" \
+    | tar xz && mv cntb /usr/local/bin/
 
-# entrypoint
-CMD /entrypoint.sh
+# add scripts
+COPY entrypoint.sh snapshot.sh /
+RUN chmod +x /entrypoint.sh /snapshot.sh
+
+# Required
+ENV CLIENTID=""
+ENV CLIENTSECRET=""
+ENV USER=""
+ENV PASSWORD=""
+
+# Optional: set a cron expression to run on a schedule (e.g. "0 3 * * *")
+# If unset, the snapshot runs once and the container exits.
+ENV CRON_SCHEDULE=""
+
+# Optional: timezone for cron scheduling (e.g. "America/New_York", "Europe/Berlin")
+ENV TZ="UTC"
+
+# Optional: snapshot name (default: daily)
+ENV SNAPSHOT_NAME="daily"
+
+ENTRYPOINT ["/entrypoint.sh"]
